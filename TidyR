@@ -1,0 +1,30 @@
+Enter file contents here#  Examples to show how to use tidyr to tidy data
+
+library(tidyr); library(dplyr)
+
+set.seed(1)
+tidyr.ex <- data.frame(
+  participant = c("p1", "p2", "p3", "p4", "p5", "p6"), 
+  info = c("g1m", "g1m", "g1f", "g2m", "g2m", "g2m"),
+  day1score = rnorm(n = 6, mean = 80, sd = 15), 
+  day2score = rnorm(n = 6, mean = 88, sd = 8)
+)
+
+print(tidyr.ex)
+
+# Take the columns day1score and day2score, which represent the variable day and the variable score, and 
+# gathered them. Why? Remember that tidy data has one column for each variable and one row for each observation. 
+# The numbers in the two columns we changed were observations, thus they should each get their own row
+tidy2 <- tidyr.ex %>%
+  gather(day, score, c(day1score, day2score)) %>%
+
+# Separate a column into two new columns
+  separate(col = info, into = c("group", "gender"), sep = 2) %>%
+  separate(col = day, into = c("day", "narrative"), sep = 3) %>%
+  separate(col = narrative, into = c("day#", "narrative2"), sep = 1)
+tidy2
+
+# Now remove useless columns
+  tidy2$day = NULL
+  tidy2$narrative2 = NULL
+tidy2
